@@ -21,7 +21,7 @@ Graph Hacks 2026 · **Track 01: Agents That Act on Connected Data** (primary) ·
 
 > **Judges, start here.** Live: **[domino.gautamkhosla.com](https://domino.gautamkhosla.com)** · Video (3 min): **[Watch on YouTube](https://youtu.be/9OHJUJJjd0Q)** · The guided tour (ten steps, all three tracks)
 > starts from the landing page's main button or at `/?judge=1`. Everything works without a key; only admin actions (rebuilding or sweeping
-> a clinic) ask for the access key, which is in my submission notes. The six story patients stay as they are, so every judge sees the same story.
+> a clinic) are locked behind an access key, and nothing a judge needs to try requires it. The six story patients stay as they are, so every judge sees the same story.
 
 ## The problem
 

@@ -19,7 +19,7 @@ Graph Hacks 2026 · **Track 01: Agents That Act on Connected Data** (primary) ·
 
 ---
 
-> **Judges, start here.** Live: **TODO_LIVE_URL** · Video (3 min): **TODO_VIDEO_URL** · The guided tour (ten steps, all three tracks)
+> **Judges, start here.** Live: **[domino.gautamkhosla.com](https://domino.gautamkhosla.com)** · Video (3 min): **TODO_VIDEO_URL** · The guided tour (ten steps, all three tracks)
 > starts from the landing page's main button or at `/?judge=1`. Everything works without a key; only admin actions (rebuilding or sweeping
 > a clinic) ask for the access key, which is in our submission notes. The six story patients stay as they are, so every judge sees the same story.
 
@@ -138,7 +138,7 @@ asks for it once, in place; the app generates its own share card; and every page
 | <img src="docs/images/inbox.png" alt="Care team inbox: signed tasks by role, one routed to the prescriber by a learned procedure" /> | <img src="docs/images/prescriber-check.png" alt="Prescriber check stops benztropine for Rosa as a documented cascade" /> | <img src="docs/images/palette.png" alt="Command palette searching patients, pages and actions" /> |
 
 - **Video:** TODO_VIDEO_URL
-- **Live:** TODO_LIVE_URL
+- **Live:** [domino.gautamkhosla.com](https://domino.gautamkhosla.com)
 - **Guided tour:** open `/?judge=1` (or press *Take the 3-minute tour*): ten steps, all three tracks, including the same question asked twice and a medicine Domino doesn't know.
 - **Story mode:** open `/patients/p-beatrice?tour=1`. The agents run, then her chain untangles on its own.
 
@@ -159,13 +159,14 @@ You need **Node 20.12+** and either **Docker** (for a local FalkorDB) or a free 
 
 ```bash
 npm install
-npm run db        # FalkorDB in Docker on localhost:6379 (Browser UI on :3001)
+npm run db        # FalkorDB in Docker on localhost:6379
 npm run setup     # seed both clinics' graphs, sweep, learn, evaluate (about a minute)
 npm run dev       # http://localhost:3000
 ```
 
 **FalkorDB Cloud instead of Docker:** copy `.env.example` to `.env.local` and set `FALKORDB_URL` (for example
-`rediss://default:PASSWORD@your-instance.falkordb.cloud:6379`), then run `npm run setup` and `npm run dev`.
+`redis://falkordb:PASSWORD@HOST:PORT` with the host, port and user from the instance's Connect page; use `rediss://` only if
+the instance has TLS on, which the free tier does not), then run `npm run setup` and `npm run dev`.
 
 **LLM agents and search by meaning (optional):** set `GEMINI_API_KEY` in `.env.local` (or `ANTHROPIC_API_KEY` /
 `OPENAI_API_KEY` for the agents), then run `npm run embed` once. With a Gemini key:
@@ -246,7 +247,7 @@ sequenceDiagram
   G-->>S: read handoff back, verify signature
   S->>G: propose_task (procedure → role, owner) · draft_note
   Note over G: every Step -[:RAN]-> Query and -[:PRODUCED]-> what it wrote
-  Note over G: a person approves or dismisses tasks; procedures re-learn
+  Note over G: a person approves or dismisses tasks, and procedures re-learn
 ```
 
 **Why each agent has only its own tools:** least privilege. The Detective cannot draft notes, the Scribe cannot read another patient,

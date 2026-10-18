@@ -14,7 +14,7 @@ flowchart TB
   end
 
   subgraph Server[Next.js server, Node runtime]
-    PX[proxy.ts<br/>nonce CSP, HSTS] --> RH[Route handlers<br/>guard(): rate limit · same-origin · access key · zod · body cap<br/>runInScope(clinic, user)]
+    PX[proxy.ts<br/>nonce CSP, HSTS] --> RH["Route handlers<br/>guard(): rate limit · same-origin · access key · zod · body cap<br/>runInScope(clinic, user)"]
     RH --> RUN[runner.ts<br/>lease → Detective → Pharmacist → Scribe<br/>Ask Domino · care-team brain]
     RH --> ENG[engine/<br/>analyze · untangle · gatekeeper · replay · population · evaluate]
     RH --> MEM[memory/<br/>procedures · conversations<br/>provenance · careteam · checkup]

@@ -94,9 +94,9 @@ Validation on real prescribing data with pharmacist adjudication; dose and kidne
 knowledge graph; SSO identities in place of the demo switcher; integration at the point of prescribing.
 
 ## Links (fill in)
-- Repository: TODO_REPO_URL
+- Repository: https://github.com/GautamTalksDev/domino
 - Demo video: TODO_VIDEO_URL
-- Live deployment: TODO_LIVE_URL
+- Live deployment: https://domino.gautamkhosla.com
 - Access key for judges (only admin actions need it): put it in the submission form's notes for judges, not in the repository
 - Blog post: `docs/BLOG.md` (publish it on Hashnode, dev.to or Medium and link it)
 

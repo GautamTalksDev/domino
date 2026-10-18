@@ -65,6 +65,15 @@ export type Item =
   | { kind: 'done'; summary: string; findings: number; tasks: number; notes: number; ms: number };
 
 /** Turns a stream event into console items (shared by the patient console and the care-team chat). */
+
+/** Model text arrives as markdown; the console shows plain text, so drop the markers ("### Handoff", **bold**, `code`). */
+function plain(text: string): string {
+  return text
+    .replace(/^#{1,6}\s+/gm, '')
+    .replace(/\*\*(.+?)\*\*/g, '$1')
+    .replace(/`([^`\n]+)`/g, '$1');
+}
+
 export function reduceEvent(
   prev: Item[],
   e: Ev,
@@ -495,10 +504,10 @@ export function Row({ item, queries, sandbox = false }: { item: Item; queries: Q
             <span className="h-px flex-1 bg-white/[0.06]" />
           </div>
         );
-      return item.text ? <p className="mb-3 ml-8 border-l-2 border-white/10 pl-3 text-[13px] leading-relaxed text-bone-2">{item.text}</p> : null;
+      return item.text ? <p className="mb-3 ml-8 whitespace-pre-line border-l-2 border-white/10 pl-3 text-[13px] leading-relaxed text-bone-2">{plain(item.text)}</p> : null;
     }
     case 'thought':
-      return <p className="mb-2 ml-8 text-[13px] italic text-dim">{item.text}</p>;
+      return <p className="mb-2 ml-8 text-[13px] italic text-dim">{plain(item.text)}</p>;
     case 'question':
       return (
         <div className="mb-2 mt-3 flex justify-end">
@@ -613,7 +622,7 @@ export function Row({ item, queries, sandbox = false }: { item: Item; queries: Q
             <span className="mono mr-2 text-[10px] uppercase text-iris">draft note</span>
             {item.noteKind === 'patient' ? 'For the patient and family' : 'For the prescriber (SBAR)'}
           </summary>
-          <p className="mt-2 whitespace-pre-wrap leading-relaxed text-bone-2">{item.text}</p>
+          <p className="mt-2 whitespace-pre-wrap leading-relaxed text-bone-2">{plain(item.text)}</p>
         </details>
       );
     case 'warning':
@@ -623,7 +632,7 @@ export function Row({ item, queries, sandbox = false }: { item: Item; queries: Q
     case 'answer':
       return (
         <div className="mb-2 mt-2 rounded-xl border border-sky/20 bg-sky/[0.05] p-3">
-          <p className="whitespace-pre-wrap text-[13.5px] leading-relaxed text-bone">{item.text}</p>
+          <p className="whitespace-pre-wrap text-[13.5px] leading-relaxed text-bone">{plain(item.text)}</p>
           {!!item.sources?.length && (
             <div className="mt-2.5 border-t border-sky/10 pt-2">
               <button

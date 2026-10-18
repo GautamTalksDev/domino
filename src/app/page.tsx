@@ -69,7 +69,7 @@ export default async function Home() {
           <div className="absolute left-[max(-200px,calc(50%-880px))] top-0 h-[560px] w-[860px] max-w-[150vw] rounded-full bg-[radial-gradient(closest-side,rgba(255,91,58,0.13),transparent)] blur-2xl" />
         </div>
         <p className="kicker">Graph Hacks 2026 · Agents on connected data · Memory and coordination · Care-team brain</p>
-        <div className="mt-5 grid gap-8 lg:grid-cols-[1.25fr_1fr] lg:items-end">
+        <div className="mt-5 grid gap-8 lg:grid-cols-[1.25fr_1fr] lg:items-center">
           <h1 className="font-display text-[44px] font-semibold leading-[1.02] sm:text-[66px] lg:text-[80px]">
             Some pills are treating <span className="italic text-vermilion">other pills.</span>
           </h1>
@@ -84,10 +84,11 @@ export default async function Home() {
               <Link href="/patients/p-beatrice?tour=1" className="btn btn-ghost">
                 Watch Beatrice’s review <ArrowRight size={16} />
               </Link>
-              <Link href="/checkup" className="btn btn-ghost">
-                Try your own list
-              </Link>
             </div>
+            <Link href="/checkup" className="mt-4 inline-flex items-center gap-1.5 text-sm text-bone-2 underline-offset-4 transition-colors hover:text-bone hover:underline">
+              Or paste your own medicine list <ArrowRight size={14} />
+            </Link>
+            <br />
             <PaletteHint />
           </div>
         </div>

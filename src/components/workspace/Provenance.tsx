@@ -135,9 +135,13 @@ function TraceGraph({ t, queries }: { t: Trace; queries: QueryMap }) {
       <p className="text-xs text-dim">
         {t.run ? (
           <>
-            Recorded by the <span className="text-bone-2">{AGENT[t.agent ?? '']?.name ?? t.agent}</span> in a{' '}
-            {t.run.mode === 'llm' ? t.run.model : 'graph-planner'} run ({t.run.trigger.replace('_', ' ')}) on {when(t.run.at)}, step {t.step}. Every box below
-            is a node in FalkorDB; every line is an edge you can query.
+            Recorded{t.agent ? (
+              <>
+                {' '}by the <span className="text-bone-2">{AGENT[t.agent]?.name ?? t.agent}</span>
+              </>
+            ) : null}{' '}
+            in a {t.run.mode === 'llm' ? t.run.model : 'graph-planner'} run ({t.run.trigger.replace('_', ' ')}) on {when(t.run.at)}
+            {t.step != null ? `, step ${t.step}` : ''}. Every box below is a node in FalkorDB; every line is an edge you can query.
           </>
         ) : (
           <>Recorded by the population sweep on {when(t.finding.at)}. Run a review to see the agent steps behind it.</>
@@ -159,7 +163,9 @@ function TraceGraph({ t, queries }: { t: Trace; queries: QueryMap }) {
         )}
 
         <Column title="Agent steps" icon={Route}>
-          {t.steps.length === 0 && <p className="text-xs text-dim">No agent steps (sweep finding).</p>}
+          {t.steps.length === 0 && (
+            <p className="text-xs text-dim">{t.run ? 'This run’s step-by-step record is not linked to this finding.' : 'No agent steps (sweep finding).'}</p>
+          )}
           {t.steps.map((s) => {
             const A = AGENT[s.agent] ?? AGENT.detective;
             return (

@@ -46,8 +46,7 @@ export function StatusPill() {
     >
       <span className={`h-1.5 w-1.5 rounded-full ${ok ? 'bg-sage' : 'bg-vermilion pulse-dot'}`} />
       <span className="mono text-[11px]">{ok ? 'FalkorDB' : h.db.ok ? 'Graph empty' : 'FalkorDB offline'}</span>
-      <span className="hidden text-mute 2xl:inline">·</span>
-      <span className="mono hidden text-[11px] text-dim 2xl:inline">{llm ? (h.agent.split(':')[1] ?? h.agent) : 'graph planner'}</span>
+      <span className="sr-only">, agents: {llm ? (h.agent.split(':')[1] ?? h.agent) : 'graph planner'}</span>
     </span>
   );
 }

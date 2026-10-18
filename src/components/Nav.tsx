@@ -29,7 +29,9 @@ export function Nav({ scope }: { scope: ScopeInfo }) {
   const mod = useModKey();
   return (
     <header className="no-print sticky top-0 z-40 border-b hairline bg-ink/80 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-[1360px] items-center gap-4 px-4 sm:px-6 2xl:gap-6">
+      {/* Nine links plus the right-hand group need about 1300px of the 1312px inside the page width, so nothing else
+          goes in this bar (the model name lives in the status pill's tooltip and in each agent console). */}
+      <div className="mx-auto flex h-16 max-w-[1360px] items-center gap-3 px-4 sm:px-6 min-[1400px]:gap-4">
         <Link href="/" aria-label="Domino home" className="shrink-0">
           <Wordmark />
         </Link>
@@ -41,7 +43,7 @@ export function Nav({ scope }: { scope: ScopeInfo }) {
                 key={l.href}
                 href={l.href}
                 aria-current={active ? 'page' : undefined}
-                className={`nav-link whitespace-nowrap rounded-lg px-2.5 py-1.5 text-sm transition-colors ${active ? 'text-bone' : 'text-dim hover:bg-white/[0.04] hover:text-bone'}`}
+                className={`nav-link whitespace-nowrap rounded-lg px-2 py-1.5 text-sm min-[1400px]:px-2.5 transition-colors ${active ? 'text-bone' : 'text-dim hover:bg-white/[0.04] hover:text-bone'}`}
               >
                 {l.label}
               </Link>
@@ -55,7 +57,6 @@ export function Nav({ scope }: { scope: ScopeInfo }) {
             aria-label={`Search ${mod}K: patients, pages and actions`}
           >
             <Search size={14} />
-            <span className="hidden 2xl:inline">Search</span>
             <span className="kbd hidden min-w-[44px] sm:inline-flex">{mod}K</span>
           </button>
           <StatusPill />

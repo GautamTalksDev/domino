@@ -1,0 +1,62 @@
+{
+  "name": "domino",
+  "version": "1.0.0",
+  "description": "Domino: an AI agent team that walks a FalkorDB medication graph to find prescribing cascades in older adults.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "db": "docker compose up -d falkordb",
+    "db:stop": "docker compose stop falkordb",
+    "seed": "tsx scripts/seed.ts",
+    "scan": "tsx scripts/scan.ts",
+    "eval": "tsx scripts/eval.ts",
+    "mcp": "tsx scripts/mcp-server.ts",
+    "setup": "tsx scripts/setup.ts",
+    "embed": "tsx scripts/embed.ts",
+    "check": "tsx scripts/check.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "docs": "tsx scripts/docs.ts",
+    "icons": "tsx scripts/icons.ts",
+    "verify:labels": "tsx scripts/verify-labels.ts",
+    "smoke": "tsx scripts/smoke.ts",
+    "bench": "tsx scripts/bench.ts",
+    "a11y": "tsx scripts/a11y.ts"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@fontsource-variable/fraunces": "5.3.0",
+    "@modelcontextprotocol/sdk": "1.32.1",
+    "d3-force": "3.0.0",
+    "falkordb": "6.8.0",
+    "geist": "1.7.2",
+    "lucide-react": "1.57.0",
+    "motion": "14.2.0",
+    "next": "16.4.1",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "server-only": "0.0.1",
+    "three": "0.185.1",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/d3-force": "3.0.10",
+    "@types/node": "22.20.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@types/three": "0.185.0",
+    "axe-core": "4.14.0",
+    "playwright": "1.64.1",
+    "tailwindcss": "4.3.3",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3",
+    "vitest": "5.0.4"
+  },
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20.12"
+  }
+}

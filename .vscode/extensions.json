@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "ms-vscode-remote.remote-wsl",
+    "bradlc.vscode-tailwindcss",
+    "vitest.explorer",
+    "ms-azuretools.vscode-docker",
+    "esbenp.prettier-vscode"
+  ]
+}

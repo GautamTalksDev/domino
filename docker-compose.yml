@@ -1,0 +1,35 @@
+# FalkorDB for local development:  npm run db   (or: docker compose up -d falkordb)
+# Full stack in containers:         docker compose --profile app up --build
+services:
+  falkordb:
+    # Developed and tested with FalkorDB 4.18.3; pin that version's tag here if a newer image changes behaviour.
+    image: falkordb/falkordb:latest
+    ports:
+      - '127.0.0.1:6379:6379'   # bound to localhost only
+    volumes:
+      - falkordb-data:/var/lib/falkordb/data
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  app:
+    profiles: ['app']
+    build: .
+    depends_on:
+      falkordb:
+        condition: service_healthy
+    environment:
+      FALKORDB_URL: redis://falkordb:6379
+      DOMINO_SIGNING_SECRET: ${DOMINO_SIGNING_SECRET:?set DOMINO_SIGNING_SECRET in .env}
+      DOMINO_WRITE_KEY: ${DOMINO_WRITE_KEY:-}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    ports:
+      - '3000:3000'
+
+volumes:
+  falkordb-data:

@@ -1,0 +1,190 @@
+{
+  "at": 1792280514482,
+  "patients": 600,
+  "truthCascades": 632,
+  "truthDeliberate": 227,
+  "candidateLinks": 2154,
+  "threshold": 0.25,
+  "variants": [
+    {
+      "id": "graph",
+      "label": "Graph links only",
+      "description": "Any CAUSES → TREATED_BY link between two of the patient’s drugs.",
+      "tp": 632,
+      "fp": 1463,
+      "fn": 0,
+      "deliberateFlagged": 227,
+      "precision": 0.302,
+      "recall": 1,
+      "f1": 0.464
+    },
+    {
+      "id": "order",
+      "label": "+ time order",
+      "description": "The second drug must start after the first.",
+      "tp": 630,
+      "fp": 810,
+      "fn": 2,
+      "deliberateFlagged": 200,
+      "precision": 0.438,
+      "recall": 0.997,
+      "f1": 0.608
+    },
+    {
+      "id": "window",
+      "label": "+ onset window",
+      "description": "Score by how common the effect is and whether the gap fits its usual onset.",
+      "tp": 630,
+      "fp": 434,
+      "fn": 2,
+      "deliberateFlagged": 200,
+      "precision": 0.592,
+      "recall": 0.997,
+      "f1": 0.743
+    },
+    {
+      "id": "reasons",
+      "label": "+ other reasons",
+      "description": "Down-weight when the second drug has its own diagnosis, or the effect was already diagnosed.",
+      "tp": 606,
+      "fp": 446,
+      "fn": 26,
+      "deliberateFlagged": 226,
+      "precision": 0.576,
+      "recall": 0.959,
+      "f1": 0.72
+    },
+    {
+      "id": "full",
+      "label": "Domino (full)",
+      "description": "Adds documented patterns and routes deliberate pairs (gastroprotection, potassium) aside.",
+      "tp": 606,
+      "fp": 204,
+      "fn": 26,
+      "deliberateFlagged": 0,
+      "precision": 0.748,
+      "recall": 0.959,
+      "f1": 0.84
+    }
+  ],
+  "byPattern": [
+    {
+      "pattern": "Graph-inferred (no documented pattern)",
+      "truth": 424,
+      "found": 416
+    },
+    {
+      "pattern": "NSAID → high blood pressure → antihypertensive",
+      "truth": 29,
+      "found": 17
+    },
+    {
+      "pattern": "ACE inhibitor → dry cough → cough suppressant",
+      "truth": 23,
+      "found": 23
+    },
+    {
+      "pattern": "Diuretic → urinary incontinence → bladder medication",
+      "truth": 22,
+      "found": 21
+    },
+    {
+      "pattern": "Calcium channel blocker → ankle swelling → diuretic",
+      "truth": 21,
+      "found": 21
+    },
+    {
+      "pattern": "Alpha-1 blocker → dizziness → vestibular sedative",
+      "truth": 19,
+      "found": 19
+    },
+    {
+      "pattern": "Metformin → diarrhoea → loperamide",
+      "truth": 18,
+      "found": 18
+    },
+    {
+      "pattern": "Thiazide → gout → gout treatment",
+      "truth": 13,
+      "found": 12
+    },
+    {
+      "pattern": "SSRI or SNRI → insomnia → sleep medication",
+      "truth": 12,
+      "found": 11
+    },
+    {
+      "pattern": "Bisphosphonate → indigestion → acid suppression",
+      "truth": 10,
+      "found": 10
+    },
+    {
+      "pattern": "Anticholinergic → urinary retention → alpha blocker",
+      "truth": 9,
+      "found": 7
+    },
+    {
+      "pattern": "Bladder antimuscarinic → memory problems → dementia medication",
+      "truth": 9,
+      "found": 9
+    },
+    {
+      "pattern": "Gabapentinoid → ankle swelling → loop diuretic",
+      "truth": 6,
+      "found": 6
+    },
+    {
+      "pattern": "Benzodiazepine → memory problems → dementia medication",
+      "truth": 3,
+      "found": 3
+    },
+    {
+      "pattern": "Verapamil → constipation → laxative",
+      "truth": 3,
+      "found": 3
+    },
+    {
+      "pattern": "Benzodiazepine → agitation or delirium → antipsychotic",
+      "truth": 3,
+      "found": 3
+    },
+    {
+      "pattern": "Colchicine → diarrhoea → loperamide",
+      "truth": 3,
+      "found": 3
+    },
+    {
+      "pattern": "Cholinesterase inhibitor → urinary incontinence → bladder antimuscarinic",
+      "truth": 2,
+      "found": 2
+    },
+    {
+      "pattern": "Corticosteroid → high blood sugar → diabetes medication",
+      "truth": 2,
+      "found": 2
+    },
+    {
+      "pattern": "Antipsychotic → parkinsonism → antiparkinsonian",
+      "truth": 1,
+      "found": 0
+    }
+  ],
+  "prevention": {
+    "patients": 600,
+    "prescriptionsChecked": 2443,
+    "trueCascadeMarkers": 534,
+    "caught": 401,
+    "caughtAnyAlert": 522,
+    "prescriptionsAvoided": 510,
+    "falseCascadeStops": 22,
+    "otherStops": 88,
+    "cautions": 794,
+    "deliberateChecked": 210,
+    "deliberateStopped": 7,
+    "deliberateCascadeStops": 1,
+    "stopRatePer100": 20.917,
+    "cascadeStopPpv": 0.948,
+    "ms": 13359
+  },
+  "ms": 14512
+}

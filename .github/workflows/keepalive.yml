@@ -1,0 +1,28 @@
+# Keeps a hosted demo awake and whole. FalkorDB Cloud's free tier stops an instance after a day unused (and deletes it
+# after seven) and keeps no data across a restart; every three hours this calls Domino's keep-alive, which queries each
+# clinic's graph and reseeds any that came back empty. Set the repository variable DOMINO_URL (https://your-app) and the
+# secret CRON_SECRET (the same value as on the deployment). Without them it does nothing.
+name: Keep the demo awake
+
+on:
+  schedule:
+    - cron: '17 */3 * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Call the keep-alive
+        env:
+          DOMINO_URL: ${{ vars.DOMINO_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          if [ -z "$DOMINO_URL" ] || [ -z "$CRON_SECRET" ]; then
+            echo "::notice::Set the DOMINO_URL variable and the CRON_SECRET secret to keep a hosted demo awake."
+            exit 0
+          fi
+          curl -fsS --retry 2 --retry-delay 20 --max-time 290 -H "Authorization: Bearer $CRON_SECRET" "${DOMINO_URL%/}/api/cron/keepalive"

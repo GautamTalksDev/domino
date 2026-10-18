@@ -1,0 +1,603 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-ink: #0d0c10;
+  --color-ink-2: #131218;
+  --color-ink-3: #1a1920;
+  --color-ink-4: #23222b;
+  --color-bone: #f4efe4;
+  --color-bone-2: #d9d3c6;
+  --color-dim: #a39e93;
+  --color-mute: #6f6b64;
+  --color-vermilion: #ff5b3a;
+  --color-vermilion-2: #ff8a6f;
+  --color-amber: #f2b544;
+  --color-sage: #7fd6a4;
+  --color-iris: #a596ff;
+  --color-sky: #6cc4ff;
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, 'SFMono-Regular', monospace;
+  --font-display: 'Fraunces Variable', 'Fraunces', Georgia, serif;
+}
+
+:root {
+  --line: rgb(244 239 228 / 0.08);
+  --line-2: rgb(244 239 228 / 0.14);
+  --line-3: rgb(244 239 228 / 0.22);
+  color-scheme: dark;
+}
+
+@layer base {
+  html {
+    background: var(--color-ink);
+    overflow-x: clip;
+    scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    background:
+      radial-gradient(1200px 600px at 85% -10%, rgb(255 91 58 / 0.07), transparent 60%),
+      radial-gradient(900px 500px at -10% 10%, rgb(165 150 255 / 0.05), transparent 60%), var(--color-ink);
+    color: var(--color-bone);
+    font-family: var(--font-sans);
+    font-feature-settings: 'ss01', 'cv11';
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    /* Decorative glows may bleed past the edge; never let them scroll the page sideways (clip keeps sticky working). */
+    overflow-x: clip;
+  }
+}
+
+::selection {
+  background: rgb(255 91 58 / 0.35);
+  color: var(--color-bone);
+}
+
+@layer components {
+  .font-display {
+    font-family: var(--font-display);
+    font-variation-settings:
+      'SOFT' 50,
+      'WONK' 0;
+    letter-spacing: -0.02em;
+  }
+
+  .dot-grid {
+    background-image: radial-gradient(rgb(244 239 228 / 0.07) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+
+  .hairline {
+    border-color: var(--line);
+  }
+
+  .card {
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.034), rgb(255 255 255 / 0.012) 60%);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.045),
+      0 1px 1px rgb(0 0 0 / 0.25),
+      0 22px 44px -28px rgb(0 0 0 / 0.7);
+  }
+  /* Cards that are links lift a little and catch the light. */
+  a.card,
+  .card-hover {
+    transition:
+      border-color 0.25s ease,
+      transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1),
+      box-shadow 0.25s ease,
+      background 0.25s ease;
+  }
+  a.card:hover,
+  .card-hover:hover {
+    border-color: var(--line-2);
+    transform: translateY(-2px);
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.05), rgb(255 255 255 / 0.016) 60%);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.07),
+      0 1px 1px rgb(0 0 0 / 0.25),
+      0 28px 56px -28px rgb(0 0 0 / 0.85),
+      0 0 0 1px rgb(255 91 58 / 0.04);
+  }
+  /* Dropdowns and popovers float over content, so they get an opaque surface. */
+  .card-pop {
+    background: linear-gradient(180deg, #1a1920, #141318 60%);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.06),
+      0 24px 60px -12px rgb(0 0 0 / 0.8),
+      0 0 0 1px rgb(0 0 0 / 0.4);
+  }
+  /* A hairline of light along the top edge, for hero panels. */
+  .card-glow {
+    position: relative;
+    isolation: isolate;
+  }
+  .card-glow::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.16), rgb(255 255 255 / 0.02) 35%, transparent 70%, rgb(255 91 58 / 0.12));
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .card-raised {
+    background: var(--color-ink-3);
+    border: 1px solid var(--line-2);
+    border-radius: 16px;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid var(--line-2);
+    border-radius: 999px;
+    padding: 2px 10px;
+    font-size: 12px;
+    line-height: 20px;
+    color: var(--color-bone-2);
+    white-space: nowrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 12px;
+    padding: 9px 16px;
+    font-size: 14px;
+    font-weight: 550;
+    transition:
+      transform 0.15s ease,
+      background 0.2s ease,
+      border-color 0.2s ease,
+      opacity 0.2s;
+    border: 1px solid transparent;
+    cursor: pointer;
+  }
+  .btn:active {
+    transform: translateY(1px);
+  }
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .btn-primary {
+    background: linear-gradient(180deg, #fffdf8, #e9e2d4);
+    color: var(--color-ink);
+    box-shadow:
+      inset 0 1px 0 #fff,
+      inset 0 -1px 0 rgb(0 0 0 / 0.08),
+      0 1px 2px rgb(0 0 0 / 0.45),
+      0 10px 24px -14px rgb(244 239 228 / 0.45);
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: linear-gradient(180deg, #fff, #f1ebdf);
+  }
+  .btn-hot {
+    background: linear-gradient(180deg, #ff6d4d, #f04e2c);
+    color: #1a0905;
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.28),
+      inset 0 -1px 0 rgb(0 0 0 / 0.12),
+      0 1px 2px rgb(0 0 0 / 0.45),
+      0 10px 26px -12px rgb(255 91 58 / 0.65);
+  }
+  .btn-hot:hover:not(:disabled) {
+    background: linear-gradient(180deg, #ff8063, #ff5b3a);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.32),
+      inset 0 -1px 0 rgb(0 0 0 / 0.12),
+      0 1px 2px rgb(0 0 0 / 0.45),
+      0 14px 34px -10px rgb(255 91 58 / 0.8);
+  }
+  .btn-ghost {
+    border-color: var(--line-2);
+    color: var(--color-bone);
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.045), rgb(255 255 255 / 0.015));
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.05),
+      0 1px 2px rgb(0 0 0 / 0.3);
+  }
+  .btn-ghost:hover:not(:disabled) {
+    border-color: var(--line-3);
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.075), rgb(255 255 255 / 0.03));
+  }
+
+  /* One look for every text field. */
+  .field {
+    width: 100%;
+    border-radius: 12px;
+    border: 1px solid var(--line-2);
+    background: rgb(0 0 0 / 0.25);
+    box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.35);
+    padding: 9px 12px;
+    font-size: 14px;
+    color: var(--color-bone);
+    outline: none;
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+  .field::placeholder {
+    color: var(--color-mute);
+  }
+  .field:focus {
+    border-color: rgb(255 91 58 / 0.55);
+    box-shadow:
+      inset 0 1px 2px rgb(0 0 0 / 0.35),
+      0 0 0 4px rgb(255 91 58 / 0.12);
+  }
+
+  /* Keyboard hint */
+  .kbd {
+    display: inline-flex;
+    white-space: nowrap;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 5px;
+    border-radius: 6px;
+    border: 1px solid var(--line-2);
+    border-bottom-width: 2px;
+    background: rgb(255 255 255 / 0.04);
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--color-dim);
+  }
+
+  .kicker {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-dim);
+  }
+
+  .mono {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+  .num {
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+
+  /* Grid items may shrink below their content (long code, tables), so nothing pushes the page sideways on a phone. */
+  .grid > * {
+    min-width: 0;
+  }
+
+  .link-u {
+    text-decoration: underline;
+    text-decoration-color: var(--line-3);
+    text-underline-offset: 3px;
+  }
+  .link-u:hover {
+    text-decoration-color: var(--color-vermilion);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-sky);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  /* ─── Domino tiles ─────────────────────────────────────────── */
+  .tile {
+    position: relative;
+    width: 112px;
+    height: 156px;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #fbf8f1, #ece5d6);
+    color: #17151a;
+    box-shadow:
+      0 1px 0 rgb(255 255 255 / 0.6) inset,
+      0 -2px 0 rgb(0 0 0 / 0.08) inset,
+      0 14px 30px -12px rgb(0 0 0 / 0.65);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform-origin: 85% 100%;
+    flex-shrink: 0;
+  }
+  .tile .tile-top {
+    flex: 1 1 52%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 10px 6px;
+    text-align: center;
+  }
+  .tile .tile-split {
+    height: 2px;
+    margin: 0 12px;
+    background: #17151a;
+    border-radius: 2px;
+    opacity: 0.85;
+  }
+  .tile .tile-bottom {
+    flex: 1 1 48%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    padding: 10px 18px 12px;
+  }
+  .tile .pip {
+    width: 9px;
+    height: 9px;
+    border-radius: 999px;
+    background: #17151a;
+    place-self: center;
+  }
+  .tile.is-root .pip-root {
+    background: var(--color-vermilion);
+  }
+  .tile.is-hit {
+    box-shadow:
+      0 0 0 2px var(--color-vermilion),
+      0 0 40px -6px rgb(255 91 58 / 0.7),
+      0 14px 30px -12px rgb(0 0 0 / 0.65);
+  }
+  .tile.is-planned {
+    box-shadow:
+      0 0 0 2px var(--color-iris),
+      0 14px 30px -12px rgb(0 0 0 / 0.65);
+  }
+  .tile.is-freed {
+    background: linear-gradient(180deg, #e9f8ef, #cfeedd);
+    box-shadow:
+      0 0 0 2px var(--color-sage),
+      0 0 30px -8px rgb(127 214 164 / 0.6),
+      0 14px 30px -12px rgb(0 0 0 / 0.65);
+  }
+  .tile-sm {
+    width: 84px;
+    height: 118px;
+    border-radius: 11px;
+  }
+}
+
+/* Provenance graph edges: drawn in, the producing step highlighted. */
+.trace-edge {
+  stroke: rgb(244 239 228 / 0.18);
+  stroke-width: 1.4;
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  animation: trace-draw 0.9s ease-out forwards;
+}
+.trace-key {
+  stroke: var(--color-vermilion);
+  stroke-width: 2.2;
+}
+@keyframes trace-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Film grain over everything: a little texture so the dark surfaces read as material, not flat colour. */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  pointer-events: none;
+  opacity: 0.045;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* Pages arrive with a short, staggered rise. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+/* Each page's top-level blocks rise in turn (the page root is main's only child). */
+/* The first three blocks (kicker, title, lead: what is above the fold) start visible, at 35% opacity, so the largest
+   paint is counted at first paint instead of waiting for the main thread to commit an animation frame. */
+@keyframes rise-soft {
+  from {
+    opacity: 0.35;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.rise > * > *:not(nav) {
+  /* backwards, not both: once it ends, nothing is left on the element (no transform, so no stacking context
+     and no containing block for fixed-position children such as dropdowns). */
+  animation: rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+}
+.rise > * > *:nth-child(-n + 3):not(nav) {
+  animation-name: rise-soft;
+}
+.rise > * > *:nth-child(2) {
+  animation-delay: 0.04s;
+}
+.rise > * > *:nth-child(3) {
+  animation-delay: 0.08s;
+}
+.rise > * > *:nth-child(4) {
+  animation-delay: 0.12s;
+}
+.rise > * > *:nth-child(5) {
+  animation-delay: 0.16s;
+}
+.rise > * > *:nth-child(n + 6) {
+  animation-delay: 0.2s;
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.pop-in {
+  animation: pop-in 0.22s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+/* Tilt cards (TiltLink): perspective tilt toward the pointer and a glare that follows it. */
+.tilt {
+  position: relative;
+  transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transform-style: preserve-3d;
+  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+  will-change: transform;
+}
+.tilt:hover {
+  transition: transform 0.08s linear, border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+.tilt::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background: radial-gradient(420px circle at var(--gx, 50%) var(--gy, 50%), rgb(255 255 255 / 0.07), transparent 45%);
+}
+.tilt:hover::after {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tilt {
+    transform: none !important;
+  }
+}
+
+/* A 3D stage that melts into the card around it instead of ending at a hard canvas edge. */
+.stage-fade {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent), linear-gradient(to bottom, #000 78%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent), linear-gradient(to bottom, #000 78%, transparent);
+  mask-composite: intersect;
+}
+
+/* A row that scrolls sideways on small screens without showing a scrollbar. */
+.scroll-row {
+  scrollbar-width: none;
+}
+.scroll-row::-webkit-scrollbar {
+  display: none;
+}
+
+/* The top navigation's current page. */
+.nav-link {
+  position: relative;
+}
+.nav-link[aria-current='page']::after {
+  content: '';
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: -13px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-vermilion), transparent);
+}
+
+/* Thin scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(244 239 228 / 0.18) transparent;
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+.pulse-dot {
+  animation: pulse-dot 1.4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
+}
+.skeleton {
+  background: linear-gradient(90deg, rgb(255 255 255 / 0.03), rgb(255 255 255 / 0.08), rgb(255 255 255 / 0.03));
+  background-size: 800px 100%;
+  animation: shimmer 1.4s linear infinite;
+  border-radius: 10px;
+}
+
+/* ─── Print (pharmacist brief) ─────────────────────────────── */
+@media print {
+  :root {
+    color-scheme: light;
+  }
+  html,
+  body {
+    background: #fff !important;
+    color: #111 !important;
+  }
+  .no-print,
+  .grain {
+    display: none !important;
+  }
+  .print-page {
+    color: #111;
+  }
+  .print-page .card {
+    border-color: #ccc;
+    background: #fff;
+  }
+  .print-page,
+  .print-page * {
+    color: #111 !important;
+    border-color: #d4d4d4 !important;
+  }
+  header.sticky,
+  footer {
+    display: none !important;
+  }
+}

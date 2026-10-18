@@ -1,0 +1,12 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    { "label": "1. Start FalkorDB (Docker)", "type": "shell", "command": "npm run db", "problemMatcher": [] },
+    { "label": "2. Seed graph + first sweep", "type": "shell", "command": "npm run setup", "problemMatcher": [] },
+    { "label": "3. Dev server", "type": "shell", "command": "npm run dev", "isBackground": true, "problemMatcher": [] },
+    { "label": "Doctor (check setup)", "type": "shell", "command": "npm run check", "problemMatcher": [] },
+    { "label": "Tests", "type": "shell", "command": "npm test", "group": "test", "problemMatcher": [] },
+    { "label": "Evaluation", "type": "shell", "command": "npm run eval", "problemMatcher": [] },
+    { "label": "MCP server (stdio)", "type": "shell", "command": "npm run mcp", "problemMatcher": [] }
+  ]
+}

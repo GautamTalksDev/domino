@@ -19,9 +19,9 @@ Graph Hacks 2026 · **Track 01: Agents That Act on Connected Data** (primary) ·
 
 ---
 
-> **Judges, start here.** Live: **[domino.gautamkhosla.com](https://domino.gautamkhosla.com)** · Video (3 min): **TODO_VIDEO_URL** · The guided tour (ten steps, all three tracks)
+> **Judges, start here.** Live: **[domino.gautamkhosla.com](https://domino.gautamkhosla.com)** · Video (3 min): **[Watch on YouTube](https://youtu.be/9OHJUJJjd0Q)** · The guided tour (ten steps, all three tracks)
 > starts from the landing page's main button or at `/?judge=1`. Everything works without a key; only admin actions (rebuilding or sweeping
-> a clinic) ask for the access key, which is in our submission notes. The six story patients stay as they are, so every judge sees the same story.
+> a clinic) ask for the access key, which is in my submission notes. The six story patients stay as they are, so every judge sees the same story.
 
 ## The problem
 
@@ -141,7 +141,7 @@ asks for it once, in place; the app generates its own share card; and every page
 | - | - | - |
 | <img src="docs/images/inbox.png" alt="Care team inbox: signed tasks by role, one routed to the prescriber by a learned procedure" /> | <img src="docs/images/prescriber-check.png" alt="Prescriber check stops benztropine for Rosa as a documented cascade" /> | <img src="docs/images/palette.png" alt="Command palette searching patients, pages and actions" /> |
 
-- **Video:** TODO_VIDEO_URL
+- **Video:** https://youtu.be/9OHJUJJjd0Q
 - **Live:** [domino.gautamkhosla.com](https://domino.gautamkhosla.com)
 - **Guided tour:** open `/?judge=1` (or press *Take the 3-minute tour*): ten steps, all three tracks, including the same question asked twice and a medicine Domino doesn't know.
 - **Story mode:** open `/patients/p-beatrice?tour=1`. The agents run, then her chain untangles on its own.
@@ -469,13 +469,11 @@ Tailwind CSS 4 · three.js · Motion · d3-force · Model Context Protocol SDK �
 ## AI assistance disclosure
 
 Domino was built with an AI coding assistant (Claude, by Anthropic), as the Graph Hacks rules allow. The assistant wrote most of the code, tests
-and documentation, working from our direction and reviews, and an independent AI review pass was used to find gaps before submission.
-TODO(gautam): in your own words, say what you decided, designed, reviewed and tested yourself, and how. Judges may ask you to explain the graph
-model, the queries and the architecture (rule 12).
+and documentation, working from my direction and reviews, and an independent AI review pass was used to find gaps before submission.
+What I did myself: I set the direction and the rules. I chose the problem, the three-agent design and the safety limits: agents raise questions for a clinician and never tell anyone to stop a medicine, every action waits for a human, and the data is synthetic only. I ran the whole stack locally and tested it by hand, and I reviewed what was built. I found a profile switch that looked like it did nothing, a live comparison that failed with a misleading error, and layout problems on the landing page, and I had each one fixed and re-tested. I did the deployment myself: FalkorDB Cloud, Vercel, a GitHub Actions keep-alive job and my own domain on Cloudflare, with every key and secret entered by me and kept server-side. I can explain the graph model, the Cypher queries and the architecture.
 
 The clinical knowledge is public and cited: every documented pattern carries its references. `npm run verify:labels` cross-checks every side
-effect in the graph against current FDA drug labels and writes `docs/LABEL_CHECK.md`; it needs network access to openFDA, which our build
-environment did not have. TODO(gautam): run it on your machine and commit docs/LABEL_CHECK.md, or delete this sentence.
+effect in the graph against current FDA drug labels and writes `docs/LABEL_CHECK.md`. I ran it on 2026-10-18: 249 of 265 side-effect edges (94%) are mentioned in the drug's current US label, and 3 more belong to drugs not sold in the US. The 16 that are not mentioned are listed in `docs/LABEL_CHECK.md` with the reason for each: mostly class effects in older adults that the label words differently (heavy, urgent urination from diuretics; anticholinergic effects named by the AGS Beers criteria), and over-the-counter products whose label has no adverse-reactions section.
 
 ## Disclaimer
 

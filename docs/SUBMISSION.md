@@ -52,7 +52,7 @@ prescriber check stops the next cascade before it is written, and a care-team br
   patient's cascade lit inside it; ⌘K / `/` searches every patient, page and action; `g` then a letter jumps between pages; team notes show
   what they will link to while you type; every page works on a phone and passes axe-core's WCAG 2 A/AA checks (`npm run a11y`).
 
-## How we built it
+## How I built it
 Next.js 16, React 19, TypeScript, FalkorDB (Cypher, variable-length paths, cycles, `allShortestPaths`, `algo.betweenness`, full-text indexes,
 one graph per tenant), three.js for the 3D dominoes and the 3D knowledge graph, Motion and d3-force for the other visuals, the Model
 Context Protocol SDK, zod, Vitest. Agents run as LLM tool-calling loops
@@ -70,14 +70,14 @@ FalkorDB's full-text index. Remove FalkorDB and nothing works.
 
 ## Challenges
 - Telling cascades from good care: a PPI started with an NSAID looks exactly like a cascade. Pattern nodes marked "usually deliberate" took
-  wrongly flagged deliberate pairs from 227 to 0 on our synthetic cohort. That is by construction (the generator marks deliberate pairs with the
+  wrongly flagged deliberate pairs from 227 to 0 on my synthetic cohort. That is by construction (the generator marks deliberate pairs with the
   same patterns), so it shows the mechanism works, not that it generalises.
 - Time: the same two drugs are a cascade in one order and not the other (Beatrice vs Dorothy), and a replay has to see the record as it was.
 - Learning without being poisoned: procedures change only from tasks people decided, whose signatures verify, by a rule you can read, and each
   version keeps links to the evidence it learned from.
 - Making agents safe to let write: least-privilege tools, a patient-bound context, write limits, a wording guardrail, signed handoffs, tasks and decisions.
-- Independent AI review passes over our own code (reviewers that had not seen it being written) found real issues: a conversation leak through
-  search, a cache shared across clinics, a verdict that ignored the engine's tiers, claims in our docs the code did not back, and more. We fixed
+- Independent AI review passes over my own code (reviewers that had not seen it being written) found real issues: a conversation leak through
+  search, a cache shared across clinics, a verdict that ignored the engine's tiers, claims in my docs the code did not back, and more. I fixed
   each one and added a test for each.
 
 ## Accomplishments
@@ -95,14 +95,14 @@ knowledge graph; SSO identities in place of the demo switcher; integration at th
 
 ## Links (fill in)
 - Repository: https://github.com/GautamTalksDev/domino
-- Demo video: TODO_VIDEO_URL
+- Demo video: https://youtu.be/9OHJUJJjd0Q
 - Live deployment: https://domino.gautamkhosla.com
 - Access key for judges (only admin actions need it): put it in the submission form's notes for judges, not in the repository
 - Blog post: `docs/BLOG.md` (publish it on Hashnode, dev.to or Medium and link it)
 
 ## AI assistance disclosure
-Domino was built with an AI coding assistant (Claude, by Anthropic), which wrote most of the code, tests and documentation from our direction
-and reviews. TODO(gautam): in your own words, what you decided, designed, reviewed and tested yourself.
+Domino was built with an AI coding assistant (Claude, by Anthropic), which wrote most of the code, tests and documentation from my direction
+and reviews. What I did myself: I set the direction and the rules. I chose the problem, the three-agent design and the safety limits: agents raise questions for a clinician and never tell anyone to stop a medicine, every action waits for a human, and the data is synthetic only. I ran the whole stack locally and tested it by hand, and I reviewed what was built. I found a profile switch that looked like it did nothing, a live comparison that failed with a misleading error, and layout problems on the landing page, and I had each one fixed and re-tested. I did the deployment myself: FalkorDB Cloud, Vercel, a GitHub Actions keep-alive job and my own domain on Cloudflare, with every key and secret entered by me and kept server-side. I can explain the graph model, the Cypher queries and the architecture.
 
 ## Requirements checklist
 - [x] Public source repository

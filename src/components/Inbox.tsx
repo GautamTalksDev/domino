@@ -160,7 +160,13 @@ export function Inbox({ userName, role }: { userName: string; role: string }) {
     return c;
   }, [tasks, mine, role]);
 
-  const shown = tasks?.filter((t) => (status === 'all' || t.status === status) && (!mine || t.role === role)) ?? null;
+  // The person you are working as changes what comes first: tasks for your role lead the list and say so.
+  const shown =
+    tasks
+      ?.filter((t) => (status === 'all' || t.status === status) && (!mine || t.role === role))
+      .map((t, i) => ({ t, i }))
+      .sort((x, y) => Number(y.t.role === role) - Number(x.t.role === role) || x.i - y.i)
+      .map((x) => x.t) ?? null;
   const waiting = (tasks ?? []).filter((t) => t.status === 'proposed');
   const byRole = waiting.reduce<Record<string, number>>((m, t) => ((m[t.role] = (m[t.role] ?? 0) + 1), m), {});
   const learnedRouted = waiting.filter((t) => t.procedureVersion != null && t.procedureReason && !t.procedureReason.startsWith('Starting procedure')).length;
@@ -174,10 +180,10 @@ export function Inbox({ userName, role }: { userName: string; role: string }) {
           <p className="mt-0.5 text-xs text-dim">waiting for a person</p>
         </div>
         {(['pharmacist', 'prescriber', 'nurse'] as const).map((r) => (
-          <div key={r} className="bg-ink-2/90 p-4">
+          <div key={r} className={`p-4 ${r === role ? 'bg-white/[0.06] shadow-[inset_0_-2px_0_var(--color-vermilion)]' : 'bg-ink-2/90'}`}>
             <p className={`font-display num text-3xl font-semibold ${byRole[r] ? ROLE_TONE[r] : 'text-mute'}`}>{tasks ? (byRole[r] ?? 0) : '–'}</p>
             <p className="mt-0.5 text-xs text-dim">
-              for the {r}
+              {r === role ? <span className="text-bone-2">for you, the {r}</span> : <>for the {r}</>}
               {r === 'prescriber' && learnedRouted > 0 && <span className="text-iris"> · {learnedRouted} routed by learned procedure</span>}
             </p>
           </div>
@@ -293,6 +299,7 @@ export function Inbox({ userName, role }: { userName: string; role: string }) {
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs">
                           <span className={`mono uppercase tracking-wide ${ROLE_TONE[t.role] ?? 'text-iris'}`}>{t.role}</span>
+                          {t.role === role && <span className="rounded-full bg-vermilion/15 px-1.5 py-px text-[10px] font-medium text-vermilion-2">for you</span>}
                           <span className="text-mute">·</span>
                           <Link href={`/patients/${t.patientId}`} className="font-medium text-bone-2 underline-offset-2 hover:text-bone hover:underline">
                             {t.patientName}

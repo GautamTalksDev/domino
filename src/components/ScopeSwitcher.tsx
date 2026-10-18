@@ -52,7 +52,11 @@ export function ScopeSwitcher({ scope }: { scope: ScopeInfo }) {
           body: 'Every query, memory and learned procedure now comes from this clinic’s own FalkorDB graph.',
         });
       else if (u && u.id !== scope.user.id)
-        toast({ tone: 'info', title: `Working as ${u.name}`, body: 'Conversations, decisions and inbox actions are now signed in this name.' });
+        toast({
+          tone: 'info',
+          title: `Working as ${u.name}, ${u.title.toLowerCase()}`,
+          body: `The clinic's patients and findings are shared by the whole team, so they stay the same. What changes: tasks for the ${u.role} come first in the inbox, Ask Domino keeps your own conversations, and every decision is signed in your name.`,
+        });
     } catch (err) {
       toast({ tone: 'error', title: 'Could not switch', body: err instanceof Error ? err.message : undefined });
     } finally {

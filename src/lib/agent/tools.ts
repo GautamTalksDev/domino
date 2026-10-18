@@ -128,6 +128,9 @@ async function hubs(ctx: ToolContext): Promise<Hub[]> {
   return (ctx.cache.hubs = fresh);
 }
 
+/** The graph's drug chokepoints, for checking what a model says about them against what the algorithm returned. */
+export const drugChokepoints = (ctx: ToolContext) => hubs(ctx);
+
 export const TOOLS: ToolSpec[] = [
   {
     name: 'get_patient_context',
@@ -148,7 +151,7 @@ export const TOOLS: ToolSpec[] = [
         .join('\n');
       const notChecked = p.headline?.match(NOT_CHECKED)?.[0];
       return {
-        summary: `${p.name}, ${p.age}${p.sex}. Today is ${dayToLabel(TODAY_DAY)}.\nDiagnoses: ${conds}\nMedications (${p.meds.length}):\n${meds}${notChecked ? `\n${notChecked} Say so in any answer about this list: not in the graph is not the same as safe.` : ''}`,
+        summary: `${p.name}, ${p.age}${p.sex}. The synthetic record runs to ${dayToLabel(TODAY_DAY)}, which is "today" for every timing below.\nDiagnoses: ${conds}\nMedications (${p.meds.length}):\n${meds}${notChecked ? `\n${notChecked} Say so in any answer about this list: not in the graph is not the same as safe.` : ''}`,
         data: { name: p.name, meds: p.meds.length },
       };
     },
@@ -459,8 +462,14 @@ export const TOOLS: ToolSpec[] = [
       const inChains = a.trees.flatMap((t) => [t.root, ...t.downstream]).filter((id) => ctx.cache.hubs!.some((h) => h.id === id));
       return {
         summary:
-          `Top cascade chokepoints in the graph: ${rows
-            .slice(0, 8)
+          // Drugs and symptoms listed apart: a symptom (hypertension) is where cascades converge, a drug is what a
+          // review can change, and only drug chokepoints set task priority.
+          `Drug chokepoints in the graph (betweenness centrality, the top ${ctx.cache.hubs.length}): ${ctx.cache.hubs
+            .map((r) => `${r.name} (${r.score})`)
+            .join(', ')}.\n` +
+          `Symptoms where many cascades converge: ${rows
+            .filter((r) => r.label !== 'Drug')
+            .slice(0, 4)
             .map((r) => `${r.name} (${Math.round(r.score)})`)
             .join(', ')}.\n` +
           (hits.length

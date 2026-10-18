@@ -49,7 +49,11 @@ WHERE z <> a AND all(n IN nodes(path) WHERE NOT n:Drug OR n.id IN meds)
 RETURN [r IN relationships(path) | [startNode(r).id, type(r), endNode(r).id]] AS hops
 ```
 
-What the graph does that the agents could not do without it:
+What the graph does that the agents could not do without it, and the landing page proves it live: **"Same question. Same
+model. One has a graph."** The same language model gets Beatrice's whole record as text, with no FalkorDB, and is asked
+what Domino's agents answer from the graph; both answers are scored side by side, with the model's unedited answer and
+the exact prompt it got (nothing pre-written; `src/lib/compare.ts`).
+
 
 - **Finds the chain.** A variable-length path, kept inside the patient's own medicines, across prescribers and months. No single prescription looks wrong; the path does.
 - **Is the medical knowledge.** 116 drugs, 50 effects, 27 documented cascade patterns with their citations, the dangerous-combination rules and each drug's class, burden and taper caution are nodes and edges. The engine reads them from FalkorDB, so the knowledge a reviewer can query is the knowledge the agents use.

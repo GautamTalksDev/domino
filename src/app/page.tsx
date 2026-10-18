@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { GraphVsPlain } from '@/components/GraphVsPlain';
 import { ArrowRight, BookOpenCheck, Brain, FileSignature, GitBranch, ShieldCheck, Stethoscope } from 'lucide-react';
 import { PaletteHint } from '@/components/PaletteHint';
 import { TourButton } from '@/components/TourButton';
@@ -118,6 +119,8 @@ export default async function Home() {
       </section>
 
       {/* Evidence band */}
+      <GraphVsPlain />
+
       <section className="mt-20 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[
           { n: '9', t: 'clinically important cascades agreed by 38 clinicians in six countries', s: 'ThinkCascades, Drugs & Aging 2022' },

@@ -11,7 +11,7 @@ Seven beats, one idea each:
 3. It stops the next one inside the EHR (1:05–1:30)
 4. **The same question twice**: memory changes the answer (1:30–2:00)
 5. A handover becomes a ticket, and the care-team brain answers with sources (2:00–2:25)
-6. **Not in the graph is not safe** (2:25–2:42)
+6. **Same question, same model, one has a graph**, with not in the graph is not safe (2:25–2:42)
 7. Close (2:42–3:00)
 
 ## Before you record
@@ -21,6 +21,7 @@ npm run setup     # fresh graphs for both clinics (also undoes any rehearsal)
 npm run dev       # then click through every page once so it is compiled and fast
 ```
 
+- **Warm it up.** Right after a deploy the first model call is slow and the graph planner may finish a step for it. Run one review and one *Run it live* before you record.
 - **Record with the language model on.** Put `GEMINI_API_KEY` in `.env.local` before `npm run setup` and restart. The console header then shows
   the model, and Ask Domino's steps show the **MCP** badge with the model choosing tools. (Without a key the graph planner runs; it works, but
   the video should show the model choosing tools over MCP.)
@@ -44,7 +45,7 @@ npm run dev       # then click through every page once so it is compiled and fas
 | 1:52–2:00 | **Run review** again | Point at "Since the last review: no longer flagged: Tamsulosin → Meclizine (the care team decided)" | "Same question, different answer, because the graph remembered." |
 | 2:00–2:13 | `/team`, *Team notes* → Add a note: title "Beatrice has a dry cough", text "Beatrice Hale has had a dry tickly cough for three weeks; her daughter asked for something for it." → *Add and link* | Watch the "will link" chips and the "Domino noticed" panel | "A handover is knowledge too. Lisinopril causes a dry cough, and nothing treats it yet: that's the moment before a cough syrup gets prescribed. So it proposes a signed review task, linked to the note." |
 | 2:13–2:25 | Same page: ask the care-team brain "Who on the team knows calcium channel blocker swelling cascades?" | Point at the sources under the answer | "And the care-team brain answers about the whole clinic, citing every query it ran." |
-| 2:25–2:42 | `/patients/p-beatrice`, Ask Domino: "Is zorbaxapril safe with her amlodipine?" | Point at the first sentence of the answer | "Zorbaxapril isn't a real medicine. Domino doesn't guess: it isn't in the graph, so it says it wasn't checked. Not in the graph is not the same as safe." |
+| 2:25–2:42 | Landing page, *Same question. Same model. One has a graph.*: **Run it live** (sped up) | Point at the two scores, then the Zorbaxapril row | "Now the judging question, answered live. The same model gets her whole record as text, with no graph. It misses the feedback loop and a dangerous combination, and it gives advice about Zorbaxapril, a medicine that doesn't exist. Domino says it isn't in the graph, so it wasn't checked. Not in the graph is not the same as safe." |
 | 2:42–3:00 | `/graph`, the 3D graph with Beatrice's cascade lit | Let it orbit | "Synthetic patients, public knowledge with citations, and an evaluation that tests the reasoning, not clinical validity. Remove FalkorDB and nothing works. Domino: find the pill that's treating another pill." |
 
 ## If something goes wrong while recording

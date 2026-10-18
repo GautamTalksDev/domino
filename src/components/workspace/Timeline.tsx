@@ -272,7 +272,7 @@ export function Timeline({ analysis, patientId }: { analysis: Analysis; patientI
         <p className="mt-2 text-xs text-mute">
           {replaying
             ? `Replay cursor: ${dayToLabel(Math.round(Math.min(cursor!, TODAY_DAY)))}. Hover a marker for what the prescriber check would have said that day.`
-            : `Each arc runs from when a drug started to when the drug that treats its side effect started. Today is ${dayToLabel(TODAY_DAY)}.`}
+            : `Each arc runs from when a drug started to when the drug that treats its side effect started. The synthetic record runs to ${dayToLabel(TODAY_DAY)}.`}
         </p>
       </div>
 

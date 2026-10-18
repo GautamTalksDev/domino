@@ -12,8 +12,8 @@ import { Q } from '../cypher';
 import { analyzePatient, loadPatient } from '../engine/analyze';
 import type { Analysis } from '../engine/types';
 import { dayToLabel, daysBetweenLabel, TODAY_DAY } from '../../data/time';
-import { EFFECT } from '../../data/knowledge';
-import { callTool, toolsFor, type ToolContext } from './tools';
+import { DRUG, EFFECT } from '../../data/knowledge';
+import { callTool, drugChokepoints, toolsFor, type ToolContext } from './tools';
 import { PROMPTS } from './prompts';
 import { getProvider, modelPause, pauseModel } from './providers';
 import { AbortedError, ProviderError, type ChatMessage, type Provider, type ToolDecl } from './providers/types';
@@ -255,6 +255,11 @@ async function handoff(ctx: ToolContext, runId: string, from: AgentRole, to: Age
     ctx.emit({ type: 'warning', text: `The ${from}'s handoff told someone to change a medicine, which Domino never does. It was held back; the ${to} works from the recorded findings.` });
     body = `Handoff held back by the wording guard (it instructed a medication change). The findings recorded in this run stand; the ${to} reads them from the graph.`;
   }
+  const check = await factCheckChokepoints(ctx, body);
+  if (check) {
+    ctx.emit({ type: 'warning', text: check });
+    body = `${body}\n\n${check}`;
+  }
   const payload = { id, run: runId, from, to, text: body, focus };
   const sig = signPayload(payload);
   await run(
@@ -263,6 +268,35 @@ async function handoff(ctx: ToolContext, runId: string, from: AgentRole, to: Age
     ctx.tracer,
   );
   return id;
+}
+
+/**
+ * A model can embellish what a graph algorithm said ("naproxen and lisinopril are chokepoints" when betweenness never
+ * returned them). Every drug a handoff calls a chokepoint is checked against the algorithm's own result, and a claim
+ * the graph does not back is corrected in the handoff the next agent reads, and shown to the person watching.
+ */
+export async function factCheckChokepoints(ctx: ToolContext, text: string): Promise<string | null> {
+  const sentences = text.split(/(?<=[.!?;])\s+|\n+/).filter((x) => /chokepoint/i.test(x) && !/\bnot\b|n['’]t\b/i.test(x));
+  if (!sentences.length) return null;
+  const named = new Set<string>();
+  for (const sentence of sentences)
+    for (const d of Object.values(DRUG)) if (d && new RegExp(`\\b${d.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i').test(sentence)) named.add(d.id);
+  if (!named.size) return null;
+  let hubs: { id: string; name: string }[];
+  try {
+    hubs = await drugChokepoints(ctx);
+  } catch {
+    return null;
+  }
+  const real = new Set(hubs.map((h) => h.id));
+  const wrong = [...named].filter((id) => !real.has(id));
+  if (!wrong.length) return null;
+  const names = wrong.map((id) => DRUG[id]?.name ?? id);
+  const mine = new Set(ctx.cache.analysis?.patient.meds.map((m) => m.id) ?? []);
+  const actual = hubs.filter((h) => mine.has(h.id)).map((h) => h.name);
+  return `Fact check against the graph: ${names.join(', ')} ${names.length === 1 ? 'is' : 'are'} not among the drug chokepoints betweenness centrality returned${
+    actual.length ? `; on this patient's record the chokepoints are ${actual.join(', ')}` : ''
+  }. The claim was the model's, not the graph's.`;
 }
 
 async function receive(ctx: ToolContext, runId: string, id: string, to: AgentRole): Promise<{ text: string; focus: string[] }> {

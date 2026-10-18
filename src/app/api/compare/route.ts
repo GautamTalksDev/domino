@@ -25,8 +25,12 @@ export const POST = handle(async (req: NextRequest) => {
     return NextResponse.json({ comparison: await runComparison(pid, AbortSignal.timeout(75_000)) });
   } catch (err) {
     if (err instanceof NoModelError) throw new HttpError(503, err.message);
-    if (err instanceof ProviderError || (err instanceof Error && err.name === 'TimeoutError'))
-      throw new HttpError(502, 'The language model did not answer in time. Try again in a minute.');
+    if (err instanceof ProviderError || (err instanceof Error && err.name === 'TimeoutError')) {
+      // Say what actually happened (over quota, cooling down after an error, or slow), and log it for the operator.
+      const why = err instanceof ProviderError ? `${err.message}${err.status ? ` (HTTP ${err.status})` : ''}` : 'it took too long';
+      console.error('[domino] compare: the model did not answer:', why);
+      throw new HttpError(502, `The language model did not answer: ${why.slice(0, 200)}. Try again in a minute.`);
+    }
     throw err;
   }
 });

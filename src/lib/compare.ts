@@ -175,12 +175,18 @@ export async function runComparison(patientId: string, signal?: AbortSignal, opt
   // Without the graph: the same model, the same record as plain text, no tools.
   const prompt = promptFor(a);
   const t1 = performance.now();
-  const res = await provider.chat(
-    'You are a careful clinical pharmacist reviewing an older adult’s medicines. Answer only with the JSON asked for.',
-    [{ role: 'user', content: prompt }],
-    [],
-    signal ?? AbortSignal.timeout(60_000),
-  );
+  const ask = () =>
+    provider.chat(
+      'You are a careful clinical pharmacist reviewing an older adult’s medicines. Answer only with the JSON asked for.',
+      [{ role: 'user', content: prompt }],
+      [],
+      signal ?? AbortSignal.timeout(60_000),
+    );
+  // One retry: the first call after a deploy is often the slow one.
+  const res = await ask().catch((err) => {
+    if (signal?.aborted) throw err;
+    return ask();
+  });
   const ms = Math.round(performance.now() - t1);
   let scored: Omit<Side, 'ms' | 'queries'>;
   let parseError: string | undefined;

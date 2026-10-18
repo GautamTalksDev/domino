@@ -13,7 +13,7 @@ import { CLASS, DRUG, EFFECT, PATTERNS } from '../../data/knowledge';
 import { REF } from '../../data/references';
 import { dayToLabel, daysBetweenLabel, TODAY_DAY } from '../../data/time';
 import { checkClinicalWording, cleanText } from './guard';
-import { knowledge } from '../engine/knowledge';
+import { knowledge, matchCombos } from '../engine/knowledge';
 import { affirmedEffects } from '../docs';
 import { NOT_CHECKED } from '../checkup';
 import { checkPrescription } from '../engine/gatekeeper';
@@ -353,7 +353,23 @@ export const TOOLS: ToolSpec[] = [
         worsens: string[];
         adds: string[];
       }>(Q.alternatives, { pid: ctx.patientId, drug: args.drug, effect: args.effect }, ctx.tracer);
-      const scored = rows
+      // An option is left out, not just ranked lower, when it would duplicate a class the patient already takes
+      // (enalapril on top of lisinopril), clash with one (AVOID_WITH), or join a dangerous combination with what
+      // she keeps taking (spironolactone with lisinopril and potassium). The graph knows all three, so say why.
+      const k = await knowledge(ctx.tracer);
+      const others = a.patient.meds.filter((m) => m.id !== String(args.drug));
+      const left: string[] = [];
+      const safe = rows.filter((r) => {
+        const cls = k.drugs.get(r.id)?.cls;
+        const same = cls ? others.find((m) => m.cls === cls) : undefined;
+        if (same) return left.push(`${r.name} (same class as ${same.name}, already taken)`), false;
+        if (r.conflicts.length) return left.push(`${r.name} (${r.conflicts[0]})`), false;
+        const joins = cls ? matchCombos([...others, { cls }], k.combos).filter((c) => c.groups.some((g) => g.includes(cls))) : [];
+        if (joins.length) return left.push(`${r.name} (would join ${joins.map((c) => c.title).join(', ')})`), false;
+        return true;
+      });
+      const why = left.length ? `\nLeft out: ${left.join('; ')}.` : '';
+      const scored = safe
         .map((r) => ({
           ...r,
           penalty: r.conflicts.length * 3 + r.worsens.length * 2 + r.adds.length + (r.beers ? 2 : 0) + Number(r.acb || 0) + (r.line === 'first' ? 0 : 1),
@@ -369,8 +385,9 @@ export const TOOLS: ToolSpec[] = [
                   `- ${r.name} (${r.clsName}, ${r.line}-line for ${r.forCondition})${r.conflicts.length ? `; CONFLICT: ${r.conflicts.join(' ')}` : ''}${r.worsens.length ? `; may worsen ${r.worsens.join(', ')}` : ''}${r.adds.length ? `; adds to existing ${r.adds.join(', ')}` : ''}${r.beers ? `; Beers: ${r.beers}` : ''}`,
               )
               .join('\n') +
-            '\nAlso consider: a lower dose of the current drug, if its effect is dose-related.'
-          : 'No alternative in the graph treats the same diagnosis without that effect. Consider dose review instead.',
+            '\nAlso consider: a lower dose of the current drug, if its effect is dose-related.' +
+            why
+          : `No alternative in the graph treats the same diagnosis without that effect or a clash with her other medicines. Consider dose review instead.${why}`,
         data: { options: scored.map((r) => r.id) },
       };
     },

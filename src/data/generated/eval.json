@@ -1,5 +1,5 @@
 {
-  "at": 1792280514482,
+  "at": 1792284699278,
   "patients": 600,
   "truthCascades": 632,
   "truthDeliberate": 227,
@@ -184,7 +184,7 @@
     "deliberateCascadeStops": 1,
     "stopRatePer100": 20.917,
     "cascadeStopPpv": 0.948,
-    "ms": 13359
+    "ms": 19432
   },
-  "ms": 14512
+  "ms": 22508
 }
